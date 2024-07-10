@@ -1,0 +1,84 @@
+Jmaster and jslave steps
+---------------------------------------------------------------------
+jmaster--->
+-------------------------------------------
+  hostnamectl set-hostname jmaster
+      exec bash
+      yum install vim wget tar git fontconfig java-17-openjdk-devel -y
+     cd /opt/
+   11  ll
+   12  wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz
+   13   wget https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.tar.gz
+   14  wget https://get.jenkins.io/war-stable/2.452.1/jenkins.war
+   ------------------------------------------------------------------------------
+   15  ll
+   16  vim /etc/hosts
+   17  ssh-keygen
+   18  ll /root/.ssh/
+   19  ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.226.137
+   20  ssh-copy-id -i ~/.ssh/id_rsa.pub jslave
+   22  scp apache-maven-3.9.7-bin.tar.gz apache-tomcat-9.0.89.tar.gz jenkins.war root@192.168.226.137:/opt
+   -------------------------------------------------------
+   23  tar -xvf apache-tomcat-9.0.89.tar.gz
+   24   tar -xvf apache-maven-3.9.7-bin.tar.gz
+   26  ll
+   27  mv apache-tomcat-9.0.89 tomcat
+   28   mv apache-maven-3.9.7 maven
+   29  ll
+   30  vim /opt/tomcat/webapps/manager/META-INF/context.xml
+   31  firewall-cmd --permanent --add-port=8080/tcp
+   32   firewall-cmd --reload
+   33  /opt/tomcat/bin/startup.sh
+   34  vim /opt/tomcat/conf/tomcat-users.xml
+   35  cp jenkins.war /opt/tomcat/webapps/
+   36  cat /root/.jenkins/secrets/initialAdminPassword
+   37  vim ~/.bashrc
+   38  source ~/.bashrc
+   39  echo $PATH
+   40  cd /root/.jenkins/
+   41  ll
+   42  cd workspace/
+   43  ll
+   44  cd SCM
+   45  LL
+   46  ll
+   47  cd webapp/
+   48  ll
+   49  cd target/
+   50  ll
+   51  history
+s
+   ====================================================================================
+   tomcat dev-environment
+   ===================================================================================
+
+    hostnamectl set-hostname devproject
+      exec bash
+      yum install vim wget tar git fontconfig java-17-openjdk-devel -y
+      cd /opt/
+      ll
+      wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz
+      tar -xvf apache-tomcat-9.0.89.tar.gz
+      mv apache-tomcat-9.0.89 tomcat
+     ll
+     vim /opt/tomcat/webapps/manager/META-INF/context.xml
+     firewall-cmd --permanent --add-port=8080/tcp
+     firewall-cmd --reload
+     /opt/tomcat/bin/startup.sh
+     vim /opt/tomcat/conf/tomcat-users.xml
+      
+      <role rolename="manager-gui"/>
+      <role rolename="manager-script"/>
+      <user username="ajay" password="ajay" roles="manager-gui"/>
+
+
+
+export PATH=$PATH:/usr/lib/jvm/java-17-openjdk-17.0.11.0.9-2.el9.x86_64/bin
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-17.0.11.0.9-2.el9.x86_64
+                              
+
+export PATH=$PATH:/opt/maven/bin
+export M2_HOME=/opt/maven
+
+
+export PATH=$PATH:/usr/bin/git

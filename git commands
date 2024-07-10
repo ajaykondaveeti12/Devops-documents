@@ -1,0 +1,213 @@
+[12:14 PM] Cloud Gen (Unverified)
+
+
+Git Installation steps:
+ 
+1. yum install git -y  
+ 
+2. Custom Version Installation method:
+
+   1. yum install wget vim tar make unzip -y
+
+   2. yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel -y
+
+   3. yum install gcc perl-ExtUtils-MakeMaker -y
+
+   4. cd /opt 
+
+   5. wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.45.1.tar.gz
+
+   ll
+
+   6. tar -xvf git-2.45.1.tar.gz
+
+   7. ll 
+
+   8. cd git-2.45.1
+
+   9. ll     
+
+   10. make prefix=/usr/local/git all
+
+   11. make prefix=/usr/local/git install
+ 
+     for test only 
+
+   12. git --version <-- you will not get the version of git  
+
+Temperer PAth:
+
+   13. export PATH=$PATH:/usr/local/git/bin
+
+   14. git --version <-- now we will get git version.
+ 
+Permanent PATH:
+
+     vim ~/.bashrc
+
+come to end of the document:
+ 
+Note: Be carefull with this file.
+ 
+give the 2 or 3 line break
+ 
+then apply/give the below path:
+ 
+export PATH=$PATH:/usr/local/git/bin
+ 
+ 
+then apply escape 
+
+then apply :wq!   <-- then hit the enter key
+ 
+then apply source ~/.bashrc
+ 
+now you can check with git version: 
+
+git --version
+ 
+ 
+git add   <-- this command used for to add the file/files to staging from working directory.
+ 
+for one file add:
+
+Syntax:
+
+git add file-name
+ 
+for more than one file add:
+ 
+Syntax:
+ 
+git add file-name file-name... nth new-file-name
+ 
+for add all files at a time:
+ 
+git add . 
+
+git add --all
+
+git add -A
+ 
+for add only normal files & normal directories
+
+git add *
+ 
+_________________________________________
+ 
+git stage file-name
+ 
+git stage file-name file-name..nth file-name
+
+git stage .
+
+git stage --all 
+
+git stage -A 
+
+git stage *
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ 
+To Reset the file/files from staging to working directory
+ 
+ 
+Example:
+ 
+git reset <-- this command used for to unstage the all files at a time from staging to working directory.
+ 
+ 
+Example:
+ 
+git reset .  <-- this command used for to unstage the all files at a time from staging to working directory.
+ 
+Example:
+ 
+git reset * <-- this command used for to unstage the all normal files at a time from staging to working directory. (Except hidden files/Directories)
+ 
+ 
+Syntax:
+
+git reset file  <-- to reset only one file at a time from staging to working directory
+ 
+Example: git add sum.java
+ 
+ 
+Syntax:
+ 
+git reset file-name file-name.. nth file-name <-- by this command we can unstage one or more files at a time from staging to working directory
+ 
+Example:
+
+git add devops aws linux
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+git commit <-- this command used fot to save/send in committing area  from staging to committing
+ 
+Syntax:  for commit only one file at a time  
+ 
+git commit -m "any one message" file-name
+ 
+Example:
+ 
+ 
+git commit -m "Version 1.0" sum.java
+ 
+ 
+Syntax: for commit one or more files at a time  :
+ 
+git commit -m "any one message" file-name file-name.. nth file-name
+ 
+Example: 
+
+git commit -m "V1.1" devops aws linux
+ 
+ 
+Syntax for commit all files at a time.
+ 
+git commit -m "message"   <-- then hit the enter key
+ 
+Example:
+ 
+git commit -m "message"
+ 
+note: by the above command we can commit the all files at a time which are located in staging area for that command applying time
+ 
+------------------------------------------------------------
+ 
+git show  <-- this command used for to show the latest commit
+ 
+ 
+---------------
+ 
+to un-commit the latest committed files from committing to staging area:
+ 
+Example:
+ 
+git reset --soft HEAD~
+ 
+ 
+-----------------------------
+ 
+git reset @~ <-- this command do the action on committed and staged files:
+ 
+by the above command we can un-commit and unstage the files a time.
+ 
+ 
+------------------------------------------
+ 
+git log <-- this command used for to lista all committed ids on all files at a time.
+ 
+for example:
+ 
+git log
+ 
+git log file-name <-- by this we can list all committis on particular file
+ 
+git log file-name
+ 
+--------------------
+ 
+git add -u <-- this command used for to add only modified and deleted files from working directory to staging area.

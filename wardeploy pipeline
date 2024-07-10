@@ -1,0 +1,65 @@
+pipeline{
+	agent any
+	tools{
+		maven "maven"
+	}
+	stages{
+		stage("code checkout "){
+		steps{
+		  git branch:'main', url:'https://github.com/ajaykondaveeti12/Cloud-Gen-Project.git'
+		}
+		}
+		stage("code analysis by sonar "){
+		 steps{
+		   withSonarQubeEnv('wardeploy'){
+		   		sh 'mvn clean install sonar:sonar'
+		   }
+		 }
+		}
+		stage("war package Build "){
+		  steps{
+		    sh 'mvn package'
+		  }
+		  post{
+		   success{
+		     echo "Archiving the Artifact"
+		     archiveArtifacts artifacts: '**/*.war'
+		   }
+		  }
+		}
+		stage("War Deploy into Nexus Repository"){
+		  steps{
+		   sh 'mvn deploy'
+		  }
+		}
+	}
+	stage("war Deploy into Tomcat server"){
+	  steps{
+	     sshagent(['wardeploy-tomcat']) {
+    		sh "scp -o StrictHostKeyChecking=no webapp/target/cloudgen-registration-form.war root@192.168.84.145:/opt/tomcat/webapps"
+		}
+	  }
+	}
+}
+ post{
+    failure{
+		emailext subject: "Build Failed: \${JOB_NAME} \${BUILD_NUMBER}",
+
+		body: "Hi Your Build was Something went Worng, pls check once your build at \${BUILD_URL}",
+
+		to: "ravindra@cloudgen.in", 
+		from: "devopscloud.hyd@gmail.com"
+	}
+success{
+
+		emailext subject: "Build Successful: \${JOB_NAME} \${BUILD_NUMBER}",
+
+		body: "Hi Your Build was Successful, pls check once your build for details at \${BUILD_URL}",
+
+		to: "ravindra@cloudgen.in",
+
+		from: "devopscloud.hyd@gmail.com"
+
+	}
+}
+}

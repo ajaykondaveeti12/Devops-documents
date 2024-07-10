@@ -1,0 +1,171 @@
+1. SonarQube Install
+2. Sonar-Integration with Jenkins 
+3. code analysis with Sonar
+ 
+ 
+ 
+sonarqubeserver configuration:
+ 
+ 
+hostnamectl set-hostname sonarqubeserver.com
+exec bash
+hostname
+ 
+ 
+sudo yum update -y
+sudo yum install vim wget curl unzip fontconfig java-17-openjdk-devel -y
+ 
+sudo setenforce 0
+sudo sed -i 's/^SELINUX-enforcing$/SELINUX=permissive/' /etc/selinux/config
+ 
+sudo tee -a /etc/sysctl.conf<<EOF
+vm.max_map_count=262144
+fs.file-max=65536
+EOF
+sudo sysctl --system
+ 
+ 
+# Create a user for sonar
+ 
+sudo useradd sonar 
+sudo passwd sonar       Ajay@123
+ 
+#Install and configure PostgreSQL
+ 
+yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+ 
+sudo yum -y install postgresql16-server postgresql16
+ 
+sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
+ 
+sudo systemctl enable --now postgresql-16
+ 
+sudo vim /var/lib/pgsql/16/data/pg_hba.conf    // need not change anything in this file
+ 
+vim /var/lib/pgsql/16/data/postgresql.conf    // uncoment line number 60 and replace as  listen_addresses = '*'
+systemctl restart postgresql-16
+su - postgres
+psql
+ 
+alter user postgres with password 'Ajay@123';
+\q
+createdb sonarqube
+psql
+CREATE USER sonarqube WITH PASSWORD 'Ajay@123';
+GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonarqube;
+\q
+ 
+exit
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.5.90363.zip
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip
+ 
+unzip sonarqube-9.4.0.54424.zip
+ 
+mv sonarqube-*/ /opt/sonarqube
+ 
+ 
+ 
+sudo vim /opt/sonarqube/conf/sonar.properties      //copy the below lines from 66 to 83 and paste at 407th line
+ 
+## Database details
+sonar.jdbc.username=sonarqube
+sonar.jdbc.password=Ajay@123
+sonar.jdbc.url-jdbc:postgresql://localhost/sonarqube
+ 
+ 
+##How you will access SonarQube web UI
+sonar.web.host=0.0.0.0
+sonar.web.post=9000
+ 
+##Java options
+ 
+sonar.web.javaOpts=-server -Xms512m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError
+sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError
+ 
+##Also add the following Elasticsearch storage paths 
+sonar.path.data=/var/sonarqube/data 
+sonar.path.temp=/var/sonarqube/temp
+ 
+ 
+chown -R sonar:sonar /opt/sonarqube
+mkdir -p /var/sonarqube
+chown -R sonar:sonar /var/sonarqube
+ 
+ 
+vim /etc/systemd/system/sonarqube.service
+ 
+ 
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+ 
+[Service]
+Type=forking
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+LimitNOFILE=65536
+LimitNPROC=4096
+User=sonar
+Group=sonar
+Restart=on-failue
+ 
+[Install]
+ 
+WantedBy=multi-user.target
+ 
+ 
+sudo systemctl daemon-reload
+sudo systemctl start sonarqube.service
+sudo systemctl enable sonarqube.service
+systemctl status sonarqube.service
+ 
+ 
+#Firewall rules to allow SonarQube Access
+ 
+sudo systemctl status firewalld 
+sudo systemctl start firewalld
+sudo systemctl status firewalld
+sudo firewall-cmd --permanent --add-port=9000/tcp
+sudo firewall-cmd --reload
+ 
+ 
+#Access the Web User Interface
+ 
+http://server-ip:9000
+ 
+ 
+for new password set
+ 
+username : admin
+New Password : CloudGen@123
+has context menu
+-------------------------------------------------------------------------
+
+root
+Ajay@1234 -login for server
+
+-----------------------------------------------------------------------------------------------------
+to login into sonarqube steps
+
+sudo setenforce 0
+sudo sed -i 's/^SELINUX-enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+sudo tee -a /etc/sysctl.conf<<EOF
+vm.max_map_count=262144
+fs.file-max=65536
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start sonarqube.service
+sudo systemctl enable sonarqube.service
+systemctl status sonarqube.service
+
+sudo systemctl status firewalld 
+sudo systemctl start firewalld
+sudo systemctl status firewalld
+sudo firewall-cmd --permanent --add-port=9000/tcp
+sudo firewall-cmd --reload
+
+
+added in tools ,system,ticked in build triggers,
+in build actions we wrote clean sonar:sonar package

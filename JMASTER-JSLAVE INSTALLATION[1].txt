@@ -1,0 +1,104 @@
+
+JSLAVE METHOD
+
+
+ 1  yum update -y
+    2  init 0
+    3  yum update -y
+    4  hostnamectl set-hostname jslave
+    5  exec bash
+    6  hostname
+    7  yum install vim wget tar git fontconfig java-17-openjdk-devel -y
+    8  cd /opt
+    9  ll
+   10  tar -xvf apache-maven-3.9.7-bin.tar.gz
+   11  tar -xvf apache-tomcat-9.0.89.tar.gz
+   12  ll
+   13  mv apache-maven-3.9.7 maven
+   14  mv apache-tomcat-9.0.89 tomcat
+   15  ll
+   16  vim /opt/tomcat/conf/tomcat-users.xml
+   17  vim /opt/tomcat/webapps/manager/META-INF/context.xml
+   18  firewall-cmd --permanent --add-port=8080/tcp
+   19  firewall-cmd --reload
+   20  /opt/tomcat/bin/startup.sh
+   21  cp jenkins.war /opt/tomcat/webapps/
+   22  ll /opt/tomcat/webapps
+   23  cat /root/.jenkins/secrets/initialAdminPassword
+   24  vim ~/.bashrc
+   25  source ~/.bashrc
+   26  java -version
+   27  git --version
+  
+   29  mvn --version
+   30  vim ~/.bashrc
+   31  echo $PATH
+   32  ll
+   33  cd /root/.jenkins
+   34  ll
+   35  cd workspace/
+   36  ll
+   37  cd war\ build\ project-1/
+   38  ll
+   39  cd webapp/
+   40  ll
+   41  cd target/
+   42  ll
+   43  cd webapp-2.war
+   44  history
+
+2SECOND METHOD
+1  yum update -y
+    2  init 0
+    3  yum update -y
+    4  hostnamectl set-hostname jmaster
+    5  exec bash
+    6  hostname
+    7  yum install vim wget tar git fontconfig java-17-openjdk-devel -y
+    8  cd /opt
+    9  wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz
+   10  wget https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.tar.gz
+   11  ll
+   12  wget https://get.jenkins.io/war-stable/2.452.1/jenkins.war
+   13  vim /etc/hosts
+   14  ssh-keygen
+   15  ll /root/.ssh/
+   16  ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.152.144
+   17  ssh-copy-id -i ~/.ssh/id_rsa.pub jslave
+   18  ll
+   19  ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.152.144
+   20  ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.116.144
+   21  ll
+   22  scp apache-maven-3.9.7-bin.tar.gz apache-tomcat-9.0.89.tar.gz jenkins.war root@192.168.116.144:/opt
+   23  tar -xvf apache-maven-3.9.7-bin.tar.gz
+   24  tar -xvf apache-tomcat-9.0.89.tar.gz
+   25  ll
+   26  mv apache-tomcat-9.0.89
+   27  mv apache-tomcat-9.0.89 tomcat
+   28  mv apache-maven-3.9.7 maven
+   29  ll
+
+   31  vim /opt/tomcat/conf/tomcat-users.xml
+   32  vim /opt/tomcat/webapps/manager/META-INF/context.xml
+   33  firewall-cmd --permanent --add-port=8080/tcp
+   34  firewall-cmd --reload
+   35  /opt/tomcat/bin/startup.sh
+   36  cp jenkins.war /opt/tomcat/webapps/
+   37  ll /opt/tomcat/webapps
+   38  cat /root/.jenkins/secrets/initialAdminPassword
+   41  echo $PATH
+   42  ll
+   43  cd workspace
+   44  cd /root/.jenkins
+   45  ll
+   46  cd workspace/
+   47  ll
+   48  cd war\ build\ project-1/
+   49  ll
+   50  cd webapp/
+   51  ll
+   52  cd ta
+   53  cd target/
+   54  ll
+   
+

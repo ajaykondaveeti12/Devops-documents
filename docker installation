@@ -1,0 +1,68 @@
+docker images <-- to list all existed images in the local docker rigstry
+
+docker search <-- this command used for to search the image/s in the docker hub
+
+docker pull <-- this command used for to pull/get the image from the docker hub
+
+
+
+
+
+
+ DOCKER INSTALLATION STEPS
+ ==========================================================
+
+hostnamectl set-hostname docker
+exec bash
+ yum install yum-utils device-mapper-persistent-data lvm2 -y
+     yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo
+      ll /etc/yum.repos.d/
+    yum install docker-ce -y
+     docker version
+     rpm -qi docker-ce
+     systemctl status docker
+     systemctl start docker
+     systemctl status docker
+     systemctl enable docker
+     docker info
+     docker images
+     docker pull centos
+     docker ps -a
+    docker run -i -t centos /bin/bash
+     docker search ubuntu
+     docker search hello-world
+     docker images
+
+--==================================================-----------------
+
+
+ ip a
+   14  ip a | grep inet
+   15  docker images
+   16  docker ps
+   17  docker ps -a
+   18  docker start e6c720603e20
+   19  docker ps
+   20  docker attach e6c720603e20
+   21  docker attach cento
+   22  docker exec cento yum install git -y
+   23  docker exec cento git --version
+   24  docker exec cento vim ~/.bashrc
+   25  docker ps
+   26  docker attach cento
+   27   firewall-cmd --permanent --add-port=8080/tcp
+   28       firewall-cmd --reload
+   29  dnf install gdm -y
+   30  dnf groupinstall "Server with GUI" -y
+   31  systemctl set-default graphical.target
+   32  runlevel
+   33  reboot
+   34  docker ps
+   35  docker ps -a
+   36  docker start cento
+   37  docker exec cento /opt/tomcat/bin/startup.sh
+   38  docker exec cento ip a
+   39  cat /root/.jenkins/secrets/initialAdminPassword
+   40  docker exec cento cat /root/.jenkins/secrets/initialAdminPassword
+   41  history
+[root@docker ~]#

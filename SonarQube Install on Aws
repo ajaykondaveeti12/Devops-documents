@@ -1,0 +1,87 @@
+     sudo yum update -y
+     sudo yum install -y java-17-amazon-corretto-devel
+    java -version
+    visudo
+
+    //  add sonar  ALL=(ALL)     ALL             in line no 108
+    //  add sonar  ALL=(ALL)   NOPASSWD: ALL  in line no 111
+    
+    sudo amazon-linux-extras install postgresql14 -y
+    sudo yum install -y postgresql postgresql-server
+    sudo /usr/bin/postgresql-setup --initdb
+    sudo systemctl enable postgresql
+
+     vim /var/lib/pgsql/data/postgresql.conf
+
+      // uncoment line number 60 and replace as  listen_addresses = '*'
+
+
+   systemctl restart postgresql
+    su - postgres
+   createdb sonarqube
+   psql
+   alter user postgres with password 'Ajay@123';
+   CREATE USER sonarqube WITH PASSWORD 'Ajay@123';
+   GRANT ALL PRIVILEGES ON DATABASE sonarqube to sonarqube;
+   \q
+   exit
+   cd /opt
+    sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.4.87374.zip
+
+    unzip sonarqube-9.9.4.87374.zip
+
+   mv sonarqube-*/ /opt/sonarqube
+   
+sudo vim /opt/sonarqube/conf/sonar.properties
+
+## Database details
+sonar.jdbc.username=sonarqube
+sonar.jdbc.password=Ajay@123
+sonar.jdbc.url-jdbc:postgresql://localhost/sonarqube
+ 
+ 
+##How you will access SonarQube web UI
+sonar.web.host=0.0.0.0
+sonar.web.post=9000
+ 
+##Java options
+ 
+sonar.web.javaOpts=-server -Xms512m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError
+sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError
+ 
+##Also add the following Elasticsearch storage paths 
+sonar.path.data=/var/sonarqube/data 
+sonar.path.temp=/var/sonarqube/temp
+ 
+    sudo useradd sonar
+    sudo passwd sonar
+   chown -R sonar:sonar /opt/sonarqube
+    mkdir -p /var/sonarqube
+   chown -R sonar:sonar /var/sonarqube
+   vim /etc/systemd/system/sonarqube.service
+
+      [Unit]
+Description=SonarQube service
+After=syslog.target network.target
+ 
+[Service]
+Type=forking
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+LimitNOFILE=65536
+LimitNPROC=4096
+User=sonar
+Group=sonar
+Restart=on-failue
+ 
+[Install]
+ 
+WantedBy=multi-user.target
+ 
+
+   sudo systemctl daemon-reload
+   sudo systemctl start sonarqube.service
+   sudo systemctl enable sonarqube.service
+   systemctl status sonarqube.service
+  
+  http://server-ip:9000
