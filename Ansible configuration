@@ -1,0 +1,93 @@
+
+#Ansible Configuration
+
+#Ansible Configuration:
+#controller
+
+192.168.254.164
+ansiblecontroller
+
+
+yum update -y
+yum install wget vim tar make unzip git -y
+hostnamectl set-hostname anscontroller 
+exec bash
+vim /etc/hosts 
+
+yum install epel-release -y
+yum install ansible -y
+
+
+
+
+
+#nodes: List 
+
+#192.168.254.157
+hostnamectl set-hostname gitserver 
+exec bash
+
+#192.168.254.154
+hostnamectl set-hostname sonarqube
+exec bash
+
+#192.168.254.152
+hostnamectl set-hostname tomcatwebserver
+exec bash
+
+#192.168.254.163
+hostnamectl set-hostname webappserver
+exec bash
+
+#192.168.254.135
+hostnamectl set-hostname cicdserver
+exec bash
+
+
+
+
+
+192.168.254.157
+gitserver 
+192.168.254.154
+sonarqube
+192.168.254.152
+tomcatwebserver
+192.168.254.163
+webappserver
+192.168.254.135
+cicdserver
+
+
+
+[scm]
+192.168.254.157
+gitserver 
+
+[codeqa]
+192.168.254.154
+sonarqube
+
+[webserver]
+192.168.254.152
+tomcatwebserver
+
+[webapp]
+192.168.254.163
+webappserver
+
+[cicd]
+192.168.254.135
+cicdserver
+
+ssh-keygen 
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.254.157
+ssh-copy-id -i ~/.ssh/id_rsa.pub gitserver 
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.254.154
+ssh-copy-id -i ~/.ssh/id_rsa.pub sonarqube
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.254.152
+ssh-copy-id -i ~/.ssh/id_rsa.pub tomcatwebserver
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.254.163
+ssh-copy-id -i ~/.ssh/id_rsa.pub webappserver
+ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.254.135
+ssh-copy-id -i ~/.ssh/id_rsa.pub cicdserver
